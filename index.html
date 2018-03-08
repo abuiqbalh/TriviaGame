@@ -1,0 +1,211 @@
+<!doctype <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>TriviaGame</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+
+    <style>
+
+        .main
+        {margin:10px;
+    
+        
+        }
+
+        h1{text-align:center;}
+    </style>
+</head>
+<body>
+    <div class="container main">
+        
+    <div class="jumbotron">
+        <h1 >Test your General Knowledge</h1>
+        <h2 id="display"></h2>     
+        <div id="time"></div>
+        <div id="quiz"></div>
+        <button id="start">Start Quiz</button>
+        <button id="submit">Submit Quiz</button>
+        <div id="results"></div>
+    </div>
+    </div>
+    <script>
+        const quizContainer = document.getElementById('quiz');
+        const resultsContainer = document.getElementById('results');
+        const submitButton = document.getElementById('submit');
+        
+        const myQuestions = [
+  {
+    question: "What used to be the currency of Italy?",
+    answers: {
+      a: "Lira",
+      b: "Dollar",
+      c: "Taka"
+    },
+    correctAnswer: "a"
+  },
+  {
+    question: "In what country was pesetas the currency?	",
+    answers: {
+      a: "Germany",
+      b: "Spain",
+      c: "France"
+    },
+    correctAnswer: "b"
+  },
+  {
+    question: "What is the world's largest office building?	",
+    answers: {
+      a: "CCTV Headquarters",
+      b: "Apple Park",
+      c: "Pentagon",
+      d: "USAA Headquarters: McDermott Building"
+    },
+    correctAnswer: "c"
+  }
+];
+function buildQuiz(){
+  // we'll need a place to store the HTML output
+  const output = [];
+
+  // for each question...
+  myQuestions.forEach(
+    (currentQuestion, questionNumber) => {
+
+      // we'll want to store the list of answer choices
+      const answers = [];
+
+      // and for each available answer...
+      for(letter in currentQuestion.answers){
+
+        // ...add an HTML radio button
+        answers.push(
+          `<label>
+            <input type="radio" name="question${questionNumber}" value="${letter}">
+            ${letter} :
+            ${currentQuestion.answers[letter]}
+          </label>`
+        );
+      }
+
+      // add this question and its answers to the output
+      output.push(
+        `<div class="question"> ${currentQuestion.question} </div>
+        <div class="answers"> ${answers.join('')} </div>`
+      );
+    }
+  );
+
+  // finally combine our output list into one string of HTML and put it on the page
+  quizContainer.innerHTML = output.join('');
+}
+
+
+function showResults(){
+
+// gather answer containers from our quiz
+const answerContainers = quizContainer.querySelectorAll('.answers');
+
+// keep track of user's answers
+let numCorrect = 0;
+
+// for each question...
+myQuestions.forEach( (currentQuestion, questionNumber) => {
+
+  // find selected answer
+  const answerContainer = answerContainers[questionNumber];
+  const selector = 'input[name=question'+questionNumber+']:checked';
+  const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+  // if answer is correct
+  if(userAnswer===currentQuestion.correctAnswer){
+    // add to the number of correct answers
+    numCorrect++;
+
+    // color the answers green
+    answerContainers[questionNumber].style.color = 'lightgreen';
+  }
+  // if answer is wrong or blank
+  else{
+    // color the answers red
+    answerContainers[questionNumber].style.color = 'red';
+  }
+});
+
+// show number of correct answers out of total
+resultsContainer.innerHTML = numCorrect + ' out of ' + myQuestions.length;
+}
+
+
+
+
+buildQuiz();
+
+submitButton.addEventListener('click', showResults);
+
+    $("#start").click(function(){
+        start();
+        console.log(intervalId);
+      })
+      
+      $("#submit").click(function(){
+        stop();
+        console.log(intervalId);
+      })
+
+      var intervalId;
+      var time=0;
+      function count(){
+        time++;
+        var converted = timeConverter(time);
+         $("#display").text("Time: "+converted);
+      }
+      $("#display").text("Time: 00:00");
+    
+    function start() {
+     intervalId = setInterval(count, 1000);
+    }
+
+     function stop() {
+
+    console.log("stopping");
+    clearInterval(intervalId);
+     }
+    console.log(intervalId);
+   
+function recordLap() {
+
+  var converted = timeConverter(time);
+  //$("#laps").append("<p>Lap " + lap + " : " + converted + "</p>");
+  //lap++;
+  console.log(converted);
+
+}
+
+function timeConverter(t) {
+
+   var minutes = Math.floor(t / 60);
+   var seconds = t - (minutes * 60);
+
+   if (seconds < 10) {
+     seconds = "0" + seconds;
+   }
+
+   if (minutes === 0) {
+     minutes = "00";
+   }
+   else if (minutes < 10) {
+     minutes = "0" + minutes;
+   }
+
+   return minutes + ":" + seconds;
+ }
+  
+
+    </script>
+</body>
+</html>
